@@ -1,0 +1,122 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Do not alter this block (unless you're familiar with LaTeX
+\documentclass{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+
+\pagestyle{fancy}
+
+
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}{\textbf{Solution}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{Michael Yen and Jay Patel}
+\rhead{CS520} 
+\chead{\textbf{Assignment 1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+    \begin{problem}{1}
+    Beside the standard 3 × 3 × 3 Rubik’s cube, there are other cubes where each side is
+divided into n pieces (n = 3 for the standard Rubik’s cube). Ignoring the colors, the small squares
+on each surface of a Rubik’s cube may be combined to form larger rectangular shapes. For an
+n × n × n Rubik’s cube, compute the total number of different rectangles (including squares) that
+can be obtained this way. For the 2 × 2 × 2 cube, the answer should be 54. Show how you derive
+your solution.
+    \end{problem}
+    
+    \begin{solution} \\
+    Each cube has 6 faces. On each face, there are n x n squares and we need to figure out the total number of different rectangles obtainable. If we imagine each face as a matrix with n length and n width, a rectangle can be formed by picking any two squares on the face, as long as the second rectangle is both at least as far to the right and as far below as the first rectangle (to prevent repeats in counting). Thus the total number of rectangles on a face is $n*n + (n-1) * (n-1) + (n-2) * (n-2) + … + 1*1 = n^2 + (n-1)^2 + … + 1$. \\
+
+    Then we have 
+    $\sum_{k=0}^{n} (n-k)^2 = \sum_{k=0}^{n} k^2 = n*(n+1)*(2n+1)/6$ (trivially proven by induction)
+    and since we have 6 faces the final answer is $6 * n*(n+1)*(2n+1)/6 = n*(n+1)*(2n+1)$.
+
+    Check for n=2: 2*3*5 = 30.
+    Okay so this is incorrect.
+
+    \end{solution}
+
+    \begin{problem}{2}
+    Two pairs of the same. Suppose that n people are assigned m different numbers, with
+replacement. For each person, a number is uniformly randomly selected from 1, . . . , m. What is
+the probability that at least two different numbers from the m numbers are each assigned to more
+than one person? Use what you computed to evaluate the probability that there are at least two
+shared birthdays in our class. Assume that a year has 365 days and our class has 50 people.
+    \end{problem}
+    
+    \begin{solution} \\
+    The probability that no numbers are assigned to more than one person is $m * (m-1) * (m-2) * ... * (m-n+1) / m^n = P_{n}^m / m^n$. The probability that at exactly one number is assigned to more than one person is the probability that exactly one number is assigned to two people + the probability that exactly one number is assigned to three people + ... + exactly one number is assigned to all people. This is ${n \choose 2} * m * (m-1) * (m-2) * ... * (m-n+2) / m^n$ + ${n \choose 3} * m * (m-1) * (m-2) * ... * (m-n+3) / m^n$ + ... + ${n \choose n-1} * m * (m-1) / m ^ n$ + ${n \choose n} * m / m ^ n$. Let's write this as a summation:
+$\sum_{k=2}^n {n \choose k} * P_{k}^m / m^n$. 
+
+Then the probability that at least two different numbers are assigned to more than one person is 1 - (probability that no numbers are assigned to more than one person + probability that exactly one number is assigned to more than one person).
+That is $1 - \frac{P^m_n + \sum_{k=2}^n {n \choose k} * P_{k}^m}{m^n}$. \\
+
+To find the probability that there are at least two shared birthdays in a class, substitute m for 365 and n for 50.
+    \end{solution}
+
+    \begin{problem}{3}
+     Consider the graphs on the right,
+which we denote as a cycle and an infinite diamond
+strip (IDS). The cycle has n nodes v1, . . . , vn = v0
+that are consecutively ordered, i.e., vi has vi-1 and vi+1 mod n as its two neighbors, with vi-1 before
+vi+1 mod n. The IDS extends infinitely to both left and right. For any node in the IDS, assume
+that in its adjacency list, the neighbors on the left appear before the neighbors on the right. Now
+consider running BFS and DFS tree and graph searches on these two graphs. For the cycle graph,
+suppose the start node is xI = v1 and the goal node is xG = xk, $1 \le k \le n$. For the diamond strip,
+the distance between xI (i.e., the green node) and xG (i.e., the red node) is 2m. For each of the
+eight search combinations, provide your estimate (i.e., in big O(·) notation) of the number of nodes
+that has been added to the queue when the search is complete. If you think that the search does
+not end, the answer should be infinity. Briefly justify your answer
+    \end{problem}
+    
+    \begin{solution} \\
+
+    BFS, tree, cycle \\
+$O(2^{{\frac{n}{2}}})$; each iteration 2 nodes are added. The worst case is if the goal node is n/2 which means at the end there will be $O(2^{\frac{n}{2}})$ nodes in the queue. \\
+
+    BFS, graph, cycle \\
+O(1); the most amount of nodes in the queue at any point in time is 2, because graph search will not add already searched nodes. Each time a node is removed from the queue, only one neighbor is added, barring the very first node. Thus at the end the number of nodes in the queue should be O(1). \\
+
+    BFS, tree, IDS \\
+O(m); since the distance is 2m, there are 2m edges in-between the start node and goal node, assuming each edge is weighted 1. Each iteration, there are eight new nodes added. Thus there should be $O(8*2m) = O(16m) = O(m)$ nodes in the queue at the end. \\
+
+    BFS, graph, IDS \\
+O(1); it is different from the tree search because seen neighbors won't be re-added. Thus, at the very most there will be 4 nodes in the queue at once and so there will be O(1) nodes in the queue by the end. \\
+
+    DFS, tree, cycle \\
+O(n); the worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. At that point we will have O(n) nodes in the queue $(v_2, v_1, v_n, v_n-1, v_n-2, ..., v_4, v_3)$. \\
+
+    DFS, graph, cycle \\
+O(n); it's the same as DFS tree search because we aren't visiting any node more than once. The worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. \\
+
+    DFS, tree, IDS \\
+$O(\infty)$; the search does not end because DFS will continually expand the first left neighbor, which continues on for infinity. \\
+
+    DFS, graph, IDS \\
+$O(\infty)$; much like with BFS tree search on IDS, the DFS will continually expand the first left neighbor for infinity. \\
+
+    \end{solution}
+
+
+\end{document}
