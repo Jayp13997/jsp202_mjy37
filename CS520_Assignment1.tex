@@ -118,5 +118,117 @@ $O(\infty)$; much like with BFS tree search on IDS, the DFS will continually exp
 
     \end{solution}
 
+    \begin{problem}{4}
+ Consider an informed, best-first search algorithm in which the evaluation function is
+$f(n) = (2 - w)g(n) + wh(n), 0 \le w \le 2$. For what values of $w$ is this algorithm guaranteed to be
+optimal when h is admissible (consider the case of TREE-SEARCH)? What kind of search does this
+perform when $w = 0$? When $w = 1$? When $w = 2$? In your proof, you may assume that if the
+heuristic in a standard $A*$
+search is inadmissible, then optimality cannot be guaranteed. Note that
+$f(n)$ here does not always directly correspond to the evaluation function in a standard $A*$
+search.
+    \end{problem}
 
+    \begin{solution} \\
+	If h is admissible, than $h(x) \le C^*_x$ \\
+	Thus $f(n) \le (2-w)g(n) + wC^*_x $ \\
+	if $w = 0$, we have $f(n) \le (2g(n))$ \\
+	if $w = 1$, we have $f(n) \le g(n) + C^*_x$ \\
+	if $w = 2$, have $f(n) \le 2C^*_x $\\
+	Looking at the results, w = 1 should be optimal because it is the same f(n) in A* Best First Search. \\
+	w = 0 should be optimal because it is using g(n) as the evaluation function, which is the cost to come. Thus we are basically performing uniform cost search which is optimal. \\
+	w = 2 is not guaranteed to be optimal because f(x) is only using the heuristic function, which is Greedy Best First Search.
+
+    \end{solution}
+
+    \begin{problem}{5}
+Consider the 8-puzzle problem and the two heuristics h1 and h2 from class. Recall
+that h1 counts the number of misplaced tiles and h2 counts the total Manhattan distance of the
+tiles to their target locations. Prove that both heuristics are consistent.
+    \end{problem}
+    \begin{solution} \\
+By definition, an admissible heuristic satisfies $h(x) \le C^*_x$ \\
+A consistent heuristic must satisfy the triangle inequality and is defined as $h(x) \le c(x, x') + h(x')$ and $h(x_G) = 0$ \\
+It is given that both heuristics must be admissible because they are both an underestimate of the actual cost. \\
+
+Proof for $h_1$: \\
+$h_1(x_G) = 0$ \\
+True, because there are no misplaced tiles in the goal state.
+
+Proof for $h_2$: \\
+$h_2(x_G) = 0$ \\
+True, because the total distance of the tiles to their target locations is 0, since they are all in their target locations.
+
+    \end{solution}
+
+    \begin{problem}{6}
+Consider the 4-queens setup given in the figure. Apply hill-climbing to the problem until no more moves are possible. The objective
+function value of a given setup is equal to the number of pairs of attacking
+queens (without considering blocking). Each queen is allowed to move in the
+column she belongs. For breaking ties, if there are multiple choices for moving
+the queens, first use the left most column with the best move and then favor
+the least number of blocks moved. If there are still ties, move up instead of down. You need to
+show at each iteration the objective function value for all 16 positions and the move that you will
+make.
+    \end{problem}
+
+    \begin{solution}
+The given diagram is represented by the list [3,4,1,2] \\
+Each iteration we list the state resulted by a move and the objective function value next to it. \\
+\textbf{1st iteration:}\\\relax
+[1,4,1,2] 3 \\\relax
+[2,4,1,2] 3 \\\relax
+[3,4,1,2] 4 \\\relax
+[4,4,1,2] 3 \\\relax
+[3,1,1,2] 3 \\\relax
+[3,2,1,2] 5 \\\relax
+[3,3,1,2] 3 \\\relax
+[3,4,1,2] 4 \\\relax
+[3,4,1,2] 4 \\\relax
+[3,4,2,2] 3 \\\relax
+[3,4,3,2] 5 \\\relax
+[3,4,4,2] 3 \\\relax
+[3,4,1,1] 3 \\\relax
+[3,4,1,2] 4 \\\relax
+[3,4,1,3] 3 \\\relax
+[3,4,1,4] 3 \\
+Winner by tie-breaker: [4,4,1,2] \\
+\textbf{2nd iteration:} \\\relax
+[1,4,1,2] 3  \\\relax
+[2,4,1,2] 3 \\\relax
+[3,4,1,2] 4 \\\relax
+[4,4,1,2] 3 \\\relax
+[4,1,1,2] 2 \\\relax
+[4,2,1,2] 3 \\\relax
+[4,3,1,2] 2 \\\relax
+[4,4,1,2] 3 \\\relax
+[4,4,1,2] 3 \\\relax
+[4,4,2,2] 4 \\\relax
+[4,4,3,2] 4 \\\relax
+[4,4,4,2] 4 \\\relax
+[4,4,1,1] 3 \\\relax
+[4,4,1,2] 3 \\\relax
+[4,4,1,3] 1 \\\relax
+[4,4,1,4] 3 \\
+Winner: [4,4,1,3] \\
+\textbf{3rd iteration:} \\\relax
+[1,4,1,3] 1 \\\relax
+[2,4,1,3] 0 \\\relax
+[3,4,1,3] 3 \\\relax
+[4,4,1,3] 1 \\\relax
+[4,1,1,3] 2 \\\relax
+[4,2,1,3] 1 \\\relax
+[4,3,1,3] 2 \\\relax
+[4,4,1,3] 1 \\\relax
+[4,4,1,3] 1 \\\relax
+[4,4,2,3] 3 \\\relax
+[4,4,3,3] 3 \\\relax
+[4,4,4,3] 1 \\\relax
+[4,4,1,1] 3 \\\relax
+[4,4,1,2] 3 \\\relax
+[4,4,1,3] 1 \\\relax
+[4,4,1,4] 3 \\
+Winner: [2,4,1,3], which also completes the hill-climbing process because its objective function is 0.
+
+    \end{solution}
 \end{document}
