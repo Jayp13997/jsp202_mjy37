@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib
+from collections import deque
 
 ''' ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ '''
 '''
@@ -8,19 +9,35 @@ import matplotlib
 '''
 ''' ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ '''
 
+# Global Queue
+global queue
+
 '''
 BFS add to queue 
 '''
 def add_to_queue_BFS(node_id, parent_node_id, cost, initialize=False):
     # Your code here
-     return
+    global queue
+    if initialize:
+        queue = deque()
+
+    queue.append((node_id, parent_node_id))
+    return
 
 '''
 BFS add to queue 
 '''
 def is_queue_empty_BFS():
     # Your code here
-    return False
+    global queue
+    # if(len(queue) == 0):
+    #     return True
+    # else:
+    #     return False
+    if not queue:
+        return True
+    else:
+        return False
 
 '''
 BFS pop from queue
@@ -28,6 +45,8 @@ BFS pop from queue
 def pop_front_BFS():
     (node_id, parent_node_id) = (0, 0)
     # Your code here
+    global queue
+    (node_id, parent_node_id) = queue.popleft()
     return (node_id, parent_node_id)
 
 '''
@@ -35,6 +54,11 @@ DFS add to queue
 '''
 def add_to_queue_DFS(node_id, parent_node_id, cost, initialize=False):
     # Your code here
+    global queue
+    if initialize:
+        queue = deque()
+
+    queue.append((node_id, parent_node_id))
     return
 
 '''
@@ -42,7 +66,15 @@ DFS add to queue
 '''
 def is_queue_empty_DFS():
     # Your code here
-    return False
+    global queue
+    # if(len(queue) == 0):
+    #     return True
+    # else:
+    #     return False
+    if not queue:
+        return True
+    else:
+        return False
 
 '''
 DFS pop from queue
@@ -50,6 +82,8 @@ DFS pop from queue
 def pop_front_DFS():
     (node_id, parent_node_id) = (0, 0)
     # Your code here
+    global queue
+    (node_id, parent_node_id) = queue.pop()
     return (node_id, parent_node_id)
 
 '''
@@ -57,6 +91,15 @@ UC add to queue
 '''
 def add_to_queue_UC(node_id, parent_node_id, cost, initialize=False):
     # Your code here
+    global queue
+    if(initialize == True):
+        queue = []
+        queue.append((node_id, parent_node_id, cost))
+    else:
+        i = 0
+        while(i < len(queue) and cost >= queue[i][2]):
+            i += 1
+        queue.insert(i, (node_id, parent_node_id, cost))
     return
 
 '''
@@ -64,7 +107,11 @@ UC add to queue
 '''
 def is_queue_empty_UC():
     # Your code here
-    return False
+    global queue
+    if(len(queue) == 0):
+        return True
+    else:
+        return False
 
 '''
 UC pop from queue
@@ -72,6 +119,8 @@ UC pop from queue
 def pop_front_UC():
     (node_id, parent_node_id) = (0, 0)
     # Your code here
+    global queue
+    (node_id, parent_node_id, cost) = queue.pop(0)
     return (node_id, parent_node_id)
 
 '''
@@ -79,6 +128,15 @@ A* add to queue
 '''
 def add_to_queue_ASTAR(node_id, parent_node_id, cost, initialize=False):
     # Your code here
+    global queue
+    if(initialize == True):
+        queue = []
+        queue.append((node_id, parent_node_id, cost))
+    else:
+        i = 0
+        while(i < len(queue) and cost >= queue[i][2]):
+            i += 1
+        queue.insert(i, (node_id, parent_node_id, cost))
     return
 
 '''
@@ -86,7 +144,11 @@ A* add to queue
 '''
 def is_queue_empty_ASTAR():
     # Your code here
-    return False
+    global queue
+    if(len(queue) == 0):
+        return True
+    else:
+        return False
 
 '''
 A* pop from queue
@@ -94,6 +156,8 @@ A* pop from queue
 def pop_front_ASTAR():
     (node_id, parent_node_id) = (0, 0)
     # Your code here
+    global queue
+    (node_id, parent_node_id, cost) = queue.pop(0)
     return (node_id, parent_node_id)
 
 ''' ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ '''
