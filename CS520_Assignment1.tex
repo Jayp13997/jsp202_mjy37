@@ -46,14 +46,10 @@ your solution.
     \end{problem}
     
     \begin{solution} \\
-    Each cube has 6 faces. On each face, there are n x n squares and we need to figure out the total number of different rectangles obtainable. If we imagine each face as a matrix with n length and n width, a rectangle can be formed by picking any two squares on the face, as long as the second rectangle is both at least as far to the right and as far below as the first rectangle (to prevent repeats in counting). Thus the total number of rectangles on a face is $n*n + (n-1) * (n-1) + (n-2) * (n-2) + … + 1*1 = n^2 + (n-1)^2 + … + 1$. \\
+    Each cube has 6 faces. On each face, there are n x n squares and we need to figure out the total number of different rectangles obtainable. If we imagine each face as a nxn matrix and put edges around each of the 1x1 cubes (resulting in (n+1) + (n+1) grid lines) a rectangle can be formed by picking any two of the vertical n+1 grid lines and any two of the horizontal n+1 grid lines. So then we have
+${n+1 \choose 2}^2$ possible rectangles for each face and the total number of rectangles is ${n+1 \choose 2}^2 * 6$.
 
-    Then we have 
-    $\sum_{k=0}^{n} (n-k)^2 = \sum_{k=0}^{n} k^2 = n*(n+1)*(2n+1)/6$ (trivially proven by induction)
-    and since we have 6 faces the final answer is $6 * n*(n+1)*(2n+1)/6 = n*(n+1)*(2n+1)$.
-
-    Check for n=2: 2*3*5 = 30.
-    Okay so this is incorrect.
+    Check for n=2: ${3 \choose 2}^2 * 6 = 9 * 6 = 54$.
 
     \end{solution}
 
@@ -66,13 +62,22 @@ shared birthdays in our class. Assume that a year has 365 days and our class has
     \end{problem}
     
     \begin{solution} \\
-    The probability that no numbers are assigned to more than one person is $m * (m-1) * (m-2) * ... * (m-n+1) / m^n = P_{n}^m / m^n$. The probability that at exactly one number is assigned to more than one person is the probability that exactly one number is assigned to two people + the probability that exactly one number is assigned to three people + ... + exactly one number is assigned to all people. This is ${n \choose 2} * m * (m-1) * (m-2) * ... * (m-n+2) / m^n$ + ${n \choose 3} * m * (m-1) * (m-2) * ... * (m-n+3) / m^n$ + ... + ${n \choose n-1} * m * (m-1) / m ^ n$ + ${n \choose n} * m / m ^ n$. Let's write this as a summation:
+    The probability that no numbers are assigned to more than one person is $m * (m-1) * (m-2) * ... * (m-n+1) / m^n = P_{n}^m / m^n$. The probability that at exactly one number is assigned to more than one person is the probability that exactly one number is assigned to two people + the probability that exactly one number is assigned to three people + ... + exactly one number is assigned to all people. \newline
+This is ${n \choose 2} * m * (m-1) * (m-2) * ... * (m-n+2) / m^n$ \newline
++ ${n \choose 3} * m * (m-1) * (m-2) * ... * (m-n+3) / m^n$ \newline
++ ... \newline
++ ${n \choose n-1} * m * (m-1) / m ^ n$ \newline
++ ${n \choose n} * m / m ^ n$. \newline
+
+ Let's write this as a summation:
 $\sum_{k=2}^n {n \choose k} * P_{k}^m / m^n$. 
 
 Then the probability that at least two different numbers are assigned to more than one person is 1 - (probability that no numbers are assigned to more than one person + probability that exactly one number is assigned to more than one person).
 That is $1 - \frac{P^m_n + \sum_{k=2}^n {n \choose k} * P_{k}^m}{m^n}$. \\
 
 To find the probability that there are at least two shared birthdays in a class, substitute m for 365 and n for 50.
+
+$1 - \frac{P^{365}_{50} + \sum_{k=2}^{50} {50 \choose k} * P_{k}^{365}}{{365}^{50}}$.
     \end{solution}
 
     \begin{problem}{3}
@@ -93,7 +98,7 @@ not end, the answer should be infinity. Briefly justify your answer
     \begin{solution} \\
 
     BFS, tree, cycle \\
-$O(2^{{\frac{n}{2}}})$; each iteration 2 nodes are added. The worst case is if the goal node is n/2 which means at the end there will be $O(2^{\frac{n}{2}})$ nodes in the queue. \\
+$O(n^2)$; each node can be added to the queue at most n/2 times before reaching the goal. Thus there will be $O(n * \frac{n}{2}$) = $O(n^2)$ nodes in the queue at the end. \\
 
     BFS, graph, cycle \\
 O(1); the most amount of nodes in the queue at any point in time is 2, because graph search will not add already searched nodes. Each time a node is removed from the queue, only one neighbor is added, barring the very first node. Thus at the end the number of nodes in the queue should be O(1). \\
@@ -105,10 +110,10 @@ O(m); since the distance is 2m, there are 2m edges in-between the start node and
 O(1); it is different from the tree search because seen neighbors won't be re-added. Thus, at the very most there will be 4 nodes in the queue at once and so there will be O(1) nodes in the queue by the end. \\
 
     DFS, tree, cycle \\
-O(n); the worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. At that point we will have O(n) nodes in the queue $(v_2, v_1, v_n, v_n-1, v_n-2, ..., v_4, v_3)$. \\
+O(1); the worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. At that point we will have only 2 nodes = O(1) in the queue. \\
 
     DFS, graph, cycle \\
-O(n); it's the same as DFS tree search because we aren't visiting any node more than once. The worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. \\
+O(1); it's the same as DFS tree search because we aren't visiting any node more than once. The worst case is if the goal node is $v_2$. Since we start from $v_1$, we will expand all the way around in the reverse direction until reaching $v_2$, which was $v_1+1$. \\
 
     DFS, tree, IDS \\
 $O(\infty)$; the search does not end because DFS will continually expand the first left neighbor, which continues on for infinity. \\
@@ -147,18 +152,33 @@ that h1 counts the number of misplaced tiles and h2 counts the total Manhattan d
 tiles to their target locations. Prove that both heuristics are consistent.
     \end{problem}
     \begin{solution} \\
-By definition, an admissible heuristic satisfies $h(x) \le C^*_x$ \\
-A consistent heuristic must satisfy the triangle inequality and is defined as $h(x) \le c(x, x') + h(x')$ and $h(x_G) = 0$ \\
-It is given that both heuristics must be admissible because they are both an underestimate of the actual cost. \\
-
-Proof for $h_1$: \\
+By definition, an admissible heuristic satisfies $h(x) \le C^*_x$. \\
+A consistent heuristic must satisfy the triangle inequality and is defined as $h(x) \le c(x, x') + h(x')$ and $h(x_G) = 0.$ \\
+It is given that both heuristics must be admissible because they are both an underestimate of the actual cost. \\ \\
+\textbf{Proof for $h_1$} \\
+Base Case: \\
 $h_1(x_G) = 0$ \\
-True, because there are no misplaced tiles in the goal state.
-
-Proof for $h_2$: \\
+True, because there are no misplaced tiles in the goal state. \\
+$h_1(x_G) \le c(x_G, x_G) + h_1(x_G)$ \\
+$h_1(x_G) \le 0 + h_1(x_G)$, which is true. \\ \\
+Inductive Step: \\
+Assume that the claim (triangle inequality) holds true for a group of states. \\
+It will suffice to show the claim holds true for a state $x$ that has a successor, $x'$, which is one of the states in the group for which the claim holds true. \\
+$h_1(x) \le c(x, x') + h_1(x')$ \\
+$h_1(x) \le c(x, x') + C^*_{x'}$, using the fact that $h_1$ is admissible. \\
+$h_1(x) \le C^*_{x}$ \\
+This is obviously true because $h_1$ is admissible. Thus proved that $h_1$ is consistent. \\ \\
+\textbf{Proof for $h_2$} \\
+Base Case: \\
 $h_2(x_G) = 0$ \\
-True, because the total distance of the tiles to their target locations is 0, since they are all in their target locations.
-
+True, because the total distance of the tiles to their target locations is 0, since they are all in their target locations. \\
+$h_2(x_G) \le c(x_G, x_G) + h_2(x_G)$ \\
+$h_2(x_G) \le 0 + h_2(x_G)$, which is true. \\ \\
+Inductive Step: \\
+Assume that the claim (triangle inequality) holds true for a group of states. \\
+It will suffice to show the claim holds true for a state $x$ that has a successor, $x'$, which is one of the states in the group for which the claim holds true. \\
+The rest of the proof is the exact same as is for $h_1$.
+Thus proved that $h_2$ is consistent.
     \end{solution}
 
     \begin{problem}{6}
